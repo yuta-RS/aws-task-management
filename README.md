@@ -65,3 +65,33 @@ AWS上に構築するタスク管理Webアプリケーション
 通信経路は以下を想定しています。
 
 Internet → ALB → EC2 → RDS
+
+## ネットワーク設計
+
+### VPC
+
+- CIDR: 10.0.0.0/16
+
+### Subnet
+
+| 用途 | AZ | CIDR |
+|---|---|---|
+| Public Subnet 1 | AZ-a | 10.0.1.0/24 |
+| Public Subnet 2 | AZ-c | 10.0.2.0/24 |
+| App Private Subnet 1 | AZ-a | 10.0.11.0/24 |
+| App Private Subnet 2 | AZ-c | 10.0.12.0/24 |
+| DB Private Subnet 1 | AZ-a | 10.0.21.0/24 |
+| DB Private Subnet 2 | AZ-c | 10.0.22.0/24 |
+
+### 通信経路
+
+Internet → ALB → EC2 → RDS
+
+EC2およびRDSはPrivate Subnetに配置し、
+インターネットから直接アクセスできない構成とします。
+
+### Security Group
+
+- ALB：InternetからHTTP/HTTPSを許可
+- EC2：ALBからアプリケーションポートのみ許可
+- RDS：EC2からPostgreSQL（5432）のみ許可
