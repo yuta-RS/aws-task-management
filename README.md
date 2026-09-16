@@ -48,3 +48,20 @@ AWS上に構築するタスク管理Webアプリケーション
 - タイトル
 - 期限
 - 完了状態
+
+## AWS構成
+
+以下の構成を予定しています。
+
+- VPC
+- Public Subnet
+- Private Subnet
+- Application Load Balancer
+- EC2
+- RDS for PostgreSQL
+- IAM
+- CloudWatch
+
+通信経路は以下を想定しています。
+
+Internet → ALB → EC2 → RDS
