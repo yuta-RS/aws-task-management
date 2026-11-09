@@ -58,3 +58,25 @@ jobs:
         run: |
           docker build -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" .
           docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      - name: Download current ECS task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition aws-task-management \
+            --query taskDefinition \
+            > task-definition.json
+
+      - name: Render new ECS task definition
+        id: render-task
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: app
+          image: 762843419519.dkr.ecr.ap-northeast-1.amazonaws.com/aws-task-management:${{ github.sha }}
+
+      - name: Deploy to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render-task.outputs.task-definition }}
+          service: aws-task-management-service
+          cluster: aws-task-management-cluster
+          wait-for-service-stability: false
