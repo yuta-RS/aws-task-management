@@ -36,31 +36,18 @@ Python / FastAPIで開発したアプリケーションをDockerでコンテナ�
 
 
 | 分類 | 技術 |
-
 |---|---|
-
 | 言語 | Python |
-
 | Webフレームワーク | FastAPI |
-
 | データベース | PostgreSQL |
-
 | コンテナ | Docker |
-
 | コンテナ実行基盤 | Amazon ECS Fargate |
-
 | コンテナレジストリ | Amazon ECR |
-
 | ロードバランサー | Application Load Balancer |
-
 | インフラ管理 | Terraform |
-
 | CI/CD | GitHub Actions |
-
 | 認証・権限管理 | AWS IAM / OIDC |
-
 | シークレット管理 | AWS Systems Manager Parameter Store |
-
 | ログ管理 | Amazon CloudWatch Logs |
 
 
@@ -71,28 +58,28 @@ Python / FastAPIで開発したアプリケーションをDockerでコンテナ�
 
 flowchart TB
 
-&#x20;   User\["API利用者"] --> ALB\["Application Load Balancer"]
+&#x20;   User["API利用者"] --> ALB["Application Load Balancer"]
 
 
-&#x20;   subgraph AWS\["AWS / VPC"]
+&#x20;   subgraph AWS["AWS / VPC"]
 
-&#x20;       subgraph Public\["Public Subnets（2AZ）"]
+&#x20;       subgraph Public["Public Subnets（2AZ）"]
 
 &#x20;           ALB
 
 &#x20;       end
 
 
-&#x20;       subgraph PrivateApp\["Application Private Subnets（2AZ）"]
+&#x20;       subgraph PrivateApp["Application Private Subnets（2AZ）"]
 
-&#x20;           ECS\["Amazon ECS Fargate / FastAPI"]
+&#x20;           ECS["Amazon ECS Fargate / FastAPI"]
 
 &#x20;       end
 
 
-&#x20;       subgraph PrivateDB\["Database Private Subnets（2AZ）"]
+&#x20;       subgraph PrivateDB["Database Private Subnets（2AZ）"]
 
-&#x20;           RDS\["Amazon RDS / PostgreSQL"]
+&#x20;           RDS["Amazon RDS / PostgreSQL"]
 
 &#x20;       end
 
@@ -102,16 +89,16 @@ flowchart TB
 &#x20;       ECS --> RDS
 
 
-&#x20;       SSM\["SSM Parameter Store"] -. "DB認証情報" .-> ECS
+&#x20;       SSM["SSM Parameter Store"] -. "DB認証情報" .-> ECS
 
-&#x20;       ECS --> CW\["CloudWatch Logs"]
+&#x20;       ECS --> CW["CloudWatch Logs"]
 
-&#x20;       ECS -. "VPC Endpoints" .-> ECR\["Amazon ECR"]
+&#x20;       ECS -. "VPC Endpoints" .-> ECR["Amazon ECR"]
 
 &#x20;   end
 
 
-&#x20;   GitHub\["GitHub / GitHub Actions"] --> OIDC\["AWS IAM OIDC"]
+&#x20;   GitHub["GitHub / GitHub Actions"] --> OIDC["AWS IAM OIDC"]
 
 &#x20;   OIDC --> ECR
 
@@ -130,19 +117,12 @@ VPC内にPublic Subnet、Application Private Subnet、Database Private Subnetを
 
 
 | 用途 | AZ | CIDR |
-
 |---|---|---|
-
 | Public Subnet 1 | ap-northeast-1a | 10.0.1.0/24 |
-
 | Public Subnet 2 | ap-northeast-1c | 10.0.2.0/24 |
-
 | Application Private Subnet 1 | ap-northeast-1a | 10.0.11.0/24 |
-
 | Application Private Subnet 2 | ap-northeast-1c | 10.0.12.0/24 |
-
 | Database Private Subnet 1 | ap-northeast-1a | 10.0.21.0/24 |
-
 | Database Private Subnet 2 | ap-northeast-1c | 10.0.22.0/24 |
 
 
@@ -193,17 +173,17 @@ GitHub Actionsを使用して、mainブランチへのpushまたは手動実行�
 
 flowchart LR
 
-&#x20;   A\["GitHub main"] --> B\["GitHub Actions"]
+&#x20;   A["GitHub main"] --> B["GitHub Actions"]
 
-&#x20;   B --> C\["OIDC認証"]
+&#x20;   B --> C["OIDC認証"]
 
-&#x20;   C --> D\["Docker Build"]
+&#x20;   C --> D["Docker Build"]
 
-&#x20;   D --> E\["Amazon ECR"]
+&#x20;   D --> E["Amazon ECR"]
 
-&#x20;   E --> F\["ECSタスク定義更新"]
+&#x20;   E --> F["ECSタスク定義更新"]
 
-&#x20;   F --> G\["ECSサービス更新"]
+&#x20;   F --> G["ECSサービス更新"]
 
 ```
 
@@ -231,19 +211,12 @@ TerraformとGitHub Actionsが同じECSタスク定義の更新を競合しない
 
 
 | HTTPメソッド | エンドポイント | 機能 |
-
 |---|---|---|
-
 | GET | `/` | ルートエンドポイント |
-
 | GET | `/health` | ヘルスチェック |
-
 | GET | `/tasks` | タスク一覧取得 |
-
 | POST | `/tasks` | タスク作成 |
-
 | PATCH | `/tasks/{task_id}` | タスク更新 |
-
 | DELETE | `/tasks/{task_id}` | タスク削除 |
 
 
@@ -257,17 +230,11 @@ TerraformとGitHub Actionsが同じECSタスク定義の更新を競合しない
 
 
 | 操作 | 結果 |
-
 |---|---|
-
 | GET `/health` | HTTP 200 |
-
 | GET `/tasks` | HTTP 200 |
-
 | POST `/tasks` | HTTP 200 |
-
 | PATCH `/tasks/6` | HTTP 200 |
-
 | DELETE `/tasks/6` | HTTP 200 |
 
 
@@ -298,7 +265,7 @@ ALBやVPCエンドポイントなどは停止中も料金が発生するため�
 ## Terraform
 
 
-AWSインフラの構成コードは \[`terraform/`](./terraform/) に格納しています。
+AWSインフラの構成コードは [`terraform/`](./terraform/) に格納しています。
 
 
 主な管理対象：
