@@ -60,10 +60,10 @@ resource "aws_vpc_endpoint" "ecs_logs" {
     Name = "aws-task-management-ecs-logs"
   }
 }
-# ECSがSSM Parameter StoreからDBパスワードを取得するためのエンドポイント
-resource "aws_vpc_endpoint" "ssm" {
+# ECSがSecrets ManagerからDBパスワードを取得するためのエンドポイント
+resource "aws_vpc_endpoint" "secretsmanager" {
   vpc_id              = aws_vpc.main.id
-  service_name        = "com.amazonaws.ap-northeast-1.ssm"
+  service_name        = "com.amazonaws.ap-northeast-1.secretsmanager"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
 
@@ -77,6 +77,6 @@ resource "aws_vpc_endpoint" "ssm" {
   ]
 
   tags = {
-    Name = "aws-task-management-ssm"
+    Name = "aws-task-management-secretsmanager"
   }
 }
