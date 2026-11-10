@@ -27,13 +27,14 @@ resource "aws_ecs_service" "app" {
   }
 
   depends_on = [
-    aws_lb_listener_rule.ecs_test,
+    aws_lb_listener.http,
     aws_vpc_endpoint.ecr_api,
     aws_vpc_endpoint.ecr_dkr,
     aws_vpc_endpoint.ecs_logs,
     aws_vpc_endpoint.secretsmanager,
     aws_iam_role_policy.ecs_db_secret
   ]
+
   lifecycle {
     ignore_changes = [
       task_definition
