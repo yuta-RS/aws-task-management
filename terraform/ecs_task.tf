@@ -44,7 +44,7 @@ resource "aws_ecs_task_definition" "app" {
       secrets = [
         {
           name      = "DB_PASSWORD"
-          valueFrom = "arn:aws:ssm:ap-northeast-1:762843419519:parameter/task-management/db/password"
+          valueFrom = "${aws_db_instance.main.master_user_secret[0].secret_arn}:password::"
         }
       ]
 

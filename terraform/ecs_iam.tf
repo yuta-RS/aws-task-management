@@ -1,4 +1,4 @@
-# ECSタスク実行ロール
+# ECS task execution role
 resource "aws_iam_role" "ecs_execution" {
   name = "aws-task-management-ecs-execution-role"
 
@@ -16,14 +16,15 @@ resource "aws_iam_role" "ecs_execution" {
   })
 }
 
-# ECRからのイメージ取得とCloudWatch Logsへの出力権限
+# ECR image pull and CloudWatch Logs permissions
 resource "aws_iam_role_policy_attachment" "ecs_execution" {
   role       = aws_iam_role.ecs_execution.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
-# ECSがSSM Parameter StoreからDBパスワードを取得する権限
-resource "aws_iam_role_policy" "ecs_ssm_password" {
-  name = "aws-task-management-ecs-ssm-password"
+
+# Read the RDS master password from Secrets Manager
+resource "aws_iam_role_policy" "ecs_db_secret" {
+  name = "aws-task-management-ecs-db-secret"
   role = aws_iam_role.ecs_execution.id
 
   policy = jsonencode({
@@ -32,9 +33,9 @@ resource "aws_iam_role_policy" "ecs_ssm_password" {
       {
         Effect = "Allow"
         Action = [
-          "ssm:GetParameters"
+          "secretsmanager:GetSecretValue"
         ]
-        Resource = "arn:aws:ssm:ap-northeast-1:762843419519:parameter/task-management/db/password"
+        Resource = aws_db_instance.main.master_user_secret[0].secret_arn
       }
     ]
   })

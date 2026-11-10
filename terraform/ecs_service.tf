@@ -31,7 +31,7 @@ resource "aws_ecs_service" "app" {
     aws_vpc_endpoint.ecr_api,
     aws_vpc_endpoint.ecr_dkr,
     aws_vpc_endpoint.ecs_logs,
-    aws_iam_role_policy.ecs_ssm_password
+    aws_iam_role_policy.ecs_db_secret
   ]
   lifecycle {
     ignore_changes = [

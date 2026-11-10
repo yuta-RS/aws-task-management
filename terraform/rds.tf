@@ -19,8 +19,9 @@ resource "aws_db_instance" "main" {
   storage_type      = "gp3"
   storage_encrypted = true
 
-  username = "postgres"
-  port     = 5432
+  username                    = "postgres"
+  manage_master_user_password = true
+  port                        = 5432
 
   db_subnet_group_name   = aws_db_subnet_group.main.name
   vpc_security_group_ids = [aws_security_group.rds.id]
@@ -40,10 +41,4 @@ resource "aws_db_instance" "main" {
   ca_cert_identifier = "rds-ca-rsa2048-g1"
 
   skip_final_snapshot = true
-
-  lifecycle {
-    ignore_changes = [
-      password
-    ]
-  }
 }
