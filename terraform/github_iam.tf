@@ -29,6 +29,7 @@ resource "aws_iam_role_policy" "github_ecr" {
     ]
   })
 }
+
 # GitHub ActionsからECSへデプロイする権限
 resource "aws_iam_role_policy" "github_ecs" {
   name = "aws-task-management-github-ecs"
@@ -58,7 +59,7 @@ resource "aws_iam_role_policy" "github_ecs" {
           "ecs:DescribeServices",
           "ecs:UpdateService"
         ]
-        Resource = aws_ecs_service.app.id
+        Resource = aws_ecs_service.app.arn
       },
       {
         Effect = "Allow"
